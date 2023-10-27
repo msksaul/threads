@@ -16,23 +16,17 @@ import * as z from 'zod'
 import { Button } from '../ui/button'
 import { usePathname, useRouter } from 'next/navigation'
 import { createThread } from '@/lib/actions/thread.actions'
+import { useOrganization } from '@clerk/nextjs'
 
 interface Props {
-  user: {
-    id: string;
-    objectId: string;
-    username: string;
-    name: string;
-    bio: string;
-    image: string
-  };
-  btnTitle: string
+  userId: string
 }
 
-function PostThread({ userId }: { userId: string }) {
+function PostThread({ userId }: Props) {
 
   const router = useRouter()
   const pathname = usePathname()
+  const { organization } = useOrganization()
 
   const form = useForm<z.infer<typeof ThreadValidation>>({
     resolver: zodResolver(ThreadValidation),
@@ -43,10 +37,11 @@ function PostThread({ userId }: { userId: string }) {
   })
 
   const onSubmit = async (values: z.infer<typeof ThreadValidation>) => {
+
     await createThread({
       text: values.thread,
-      author: userId,
-      communityId: null,
+      author: userId.split('').filter(c => c !== '"').join(''),
+      communityId: organization ? organization.id : null,
       path: pathname
     })
 
