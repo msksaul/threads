@@ -28,8 +28,6 @@ interface Props {
 
 const ThreadCard = ({
   id,
-  currentUserId,
-  parentId,
   content,
   author,
   community,
@@ -71,7 +69,7 @@ const ThreadCard = ({
                 <Image src='/assets/share.svg' alt='heart' width={24} height={24} className='cursor-pointer object-contain'/>
               </div>
 
-              {isComment && comments.length > 0 && (
+              {!isComment && comments.length > 0 && (
                 <Link href={`/thread/${id}`}>
                   <p className='mt-1 text-subtle-medium text-gray-1'>{comments.length} replies</p>
                 </Link>
@@ -80,21 +78,12 @@ const ThreadCard = ({
           </div>
         </div>
       </div>
-      {!isComment && community && (
-        <Link href={`/communities/${community.id}`} className='mt-5 flex items-center'>
+      {!isComment && !community && (
+        <div className='mt-5 flex items-center'>
           <p className='text-subtle-medium text-gray-1'>
             {formatDateString(createdAt)}
-            {community && ` - ${community.name} Community`}
           </p>
-
-          <Image
-            src={community.image}
-            alt={community.name}
-            width={14}
-            height={14}
-            className='ml-1 rounded-full object-cover'
-          />
-        </Link>
+        </div>
       )}
     </article>
   )

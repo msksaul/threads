@@ -26,7 +26,6 @@ async function fetchAllChildThreads(threadId: string): Promise<any[]> {
 }
 
 export async function createThread({ text, author, communityId, path }: Params) {
-  console.log(communityId)
   try {
     connectToDB()
 
